@@ -22,37 +22,48 @@ def crossing_judge(city1,city2,city3,city4):
 
 
 def solve(cities):
-    N = len(cities)
+    N = len(cities)#512
+    print N
     dist = [[0] * N for i in range(N)]
     for i in range(N):
         for j in range(N):
             dist[i][j] = dist[j][i] = distance(cities[i], cities[j])
-    append_flag=True
     current_city = 0
     unvisited_cities = set(range(1, N))
     solution = [current_city]
 
     def distance_from_current_city(to):
         return dist[current_city][to]
-    
+
     while unvisited_cities:
+        #print 'unvisited:',len(unvisited_cities)
         next_city = min(unvisited_cities, key=distance_from_current_city)
+        append_flag=True
         for_break_flag=False
+
         for i in range(1,len(solution)):
             for j in range(i+1,len(solution)):
                 if crossing_judge(cities[solution[i]],cities[solution[j]],cities[solution[-1]],cities[next_city]):
                     append_flag=False
-                    current_city=solution[-1]
-                    solution.insert(i,next_city)
                     for_break_flag=True
-                    break
-            if for_break_flag:
-                break
+                    #print solution
+                    #solution.append(next_city)
+                    #solution[-1],solution[j]=solution[j],solution[-1]
+                    solution.insert(j,solution[-1])
+                    solution.pop()
+                    for_break_flag=True
+                #    break
+            #if for_break_flag:
+             #   break
         unvisited_cities.remove(next_city)
-        if append_flag:
-            solution.append(next_city)
-            current_city = next_city
-    #print sorted(set(solution),key=solution.index)
+        #if append_flag:
+           #print len(solution)
+        solution.append(next_city)
+        current_city = next_city
+
+
+    #sorted(set(solution),key=solution.index)
+    print len(solution)
     print solution
     return solution
 

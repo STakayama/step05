@@ -37,17 +37,24 @@ def solve(cities):
     
     while unvisited_cities:
         next_city = min(unvisited_cities, key=distance_from_current_city)
+        for_break_flag=False
         for i in range(1,len(solution)):
             for j in range(i+1,len(solution)):
                 if crossing_judge(cities[solution[i]],cities[solution[j]],cities[solution[-1]],cities[next_city]):
                     append_flag=False
                     current_city=solution[-1]
-                    solution.insert(j,next_city)
+                    solution[-1],solution[j]=solution[j],solution[-1]
+                    #solution.insert(i,next_city)
+                    for_break_flag=True
                     break
+            if for_break_flag:
+                break
         unvisited_cities.remove(next_city)
         if append_flag:
             solution.append(next_city)
             current_city = next_city
+    #print sorted(set(solution),key=solution.index)
+    print solution
     return solution
 
 
