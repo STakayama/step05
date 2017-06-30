@@ -34,7 +34,14 @@ def deal_cross(solution,cities):
     deal_solution=copy.deepcopy(solution)
     for a in range(40):
         change_times=0
-        for i in range(0,len(solution)-1):
+
+
+        for k in range(1,len(solution)-1):
+            if crossing_judge(cities[solution[k]],cities[solution[k+1]],cities[solution[-1]],cities[solution[0]]):
+                change_times+=1
+                solution[k+1] , solution[-1] = solution[-1] , solution[k+1]
+
+        for i in range(1,len(solution)-1):
             for j in range(i+1,len(solution)-1):
                 if crossing_judge(cities[solution[i]],cities[solution[i+1]],cities[solution[j]],cities[solution[j+1]]):
                     change_times+=1
