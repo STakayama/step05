@@ -21,6 +21,39 @@ def crossing_judge(city1,city2,city3,city4):
     #true:cross
 
 
+def distance_sum(solution,cities):
+    the_distance=distance(cities[solution[-1]],cities[solution[0]])
+    for l in range(0,len(solution)-1):
+        the_distance+=distance(cities[solution[l]],cities[solution[l+1]])
+    return  the_distance
+
+
+def deal_cross(solution,cities):
+    old_distance=distance_sum(solution,cities)
+    print old_distance
+    deal_solution=copy.deepcopy(solution)
+    for a in range(40):
+        change_times=0
+        for i in range(0,len(solution)-1):
+            for j in range(i+1,len(solution)-1):
+                if crossing_judge(cities[solution[i]],cities[solution[i+1]],cities[solution[j]],cities[solution[j+1]]):
+                    change_times+=1
+                    solution[i+1] , solution[j] = solution[j] , solution[i+1]
+        #for i in range(0,len(solution)-1):
+           # if crossing_judge(cities[solution[i]],cities[solution[i+1]],cities[solution[-1]],cities[solution[0]]):
+               # solution[i+1] ,solution[-1] = solution[-1] , solution[i+1]
+               # change_times+=1
+        new_distance=distance_sum(solution,cities)
+        if old_distance>new_distance:
+            old_distance=new_distance
+            print old_distance
+            deal_solution=copy.deepcopy(solution)
+        if change_times==0:
+            print 'break!!!!!!!!!!!!!!'
+            break
+    return deal_solution
+
+
 def solve(cities):
     N = len(cities)
     print N
@@ -39,39 +72,10 @@ def solve(cities):
         #print 'unvisited:',len(unvisited_cities)
         next_city = min(unvisited_cities, key=distance_from_current_city)
         unvisited_cities.remove(next_city)
-        print len(unvisited_cities)
         solution.append(next_city)
         current_city = next_city
-        not_cross_solution=copy.deepcopy(solution)
-    #print crossing_judge(cities[solution[2]],cities[solution[3]],cities[solution[4]],cities[solution[5]])
-    for i in range(1,len(solution)-1):
-        for j in range(i+1,len(solution)-1):
-                    if crossing_judge(cities[not_cross_solution[i]],cities[not_cross_solution[i+1]],cities[not_cross_solution[j]],cities[not_cross_solution[j+1]]):
-                        # if l==len(solution):
-                        append_flag=False
-                        for_break_flag=True
-                        #print solution
-                        #solution.append(next_city)
-                        #print i
-                        #print j
-                        #print not_cross_solution
-                        not_cross_solution[i+1] , not_cross_solution[j] = not_cross_solution[j] , not_cross_solution[i+1]
-                        #print not_cross_solution
-
-                        #solution.insert(j,k)
-                        #solution.pop()
-                        #for_break_flag=True
-                        #    break
-                        #if for_break_flag:
-                        #   break
-                        #if append_flag:
-                        #print len(solution)
-
-
-    #sorted(set(solution),key=solution.index)
-    #solution=copy.deepcopy(not_cross_solution)
-    #print len(solution)
-    return not_cross_solution
+    solution=deal_cross(solution,cities)
+    return solution
 
 
 if __name__ == '__main__':
